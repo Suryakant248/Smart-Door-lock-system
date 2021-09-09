@@ -1,0 +1,74 @@
+## The Aurduino Code should save with .ino extention
+
+
+#include <EEPROM.h>
+
+#include <Servo.h>
+
+
+Servo servo;
+char state;
+
+void setup() {
+EEPROM.write(0,2);
+  
+  servo.attach(7);
+  if(EEPROM.read(0) == 1) 
+  {                      
+    servo.write(0); 
+    delay(200);
+  }
+  else if(EEPROM.read(0) == 2)
+  {
+    servo.write(150); 
+    delay(200);
+  }
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  
+  if(Serial.available() > 0)
+  {
+    char data;
+    data = Serial.read();
+
+    switch(data)
+    {
+      case '1': 
+        if(EEPROM.read(0) == 1) 
+        {
+          EEPROM.write(0, 2); 
+          Serial.print("3")
+
+            servo.write(150);
+            delay(15);
+            Serial.println(servo.read());
+          }
+        
+        else if(EEPROM.read(0) == 2) 
+        {
+          EEPROM.write(0, 1); 
+          Serial.print("4"); 
+         
+            servo.write(0);
+            delay(15);
+          
+        }
+        break;
+      case '3': 
+      
+        if(EEPROM.read(0) == 1)
+        {
+          Serial.print("4");
+        }
+        else if(EEPROM.read(0) == 2)
+        {
+          Serial.print("3");
+        }
+        break;
+    }
+  }
+  
+}
